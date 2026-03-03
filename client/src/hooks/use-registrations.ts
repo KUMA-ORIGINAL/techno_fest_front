@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { api, type RegistrationInput, type RegistrationResponse } from "@shared/routes";
+import { type RegistrationInput, type RegistrationResponse } from "@shared/routes";
 import { useToast } from "@/hooks/use-toast";
 
 export function useCreateRegistration() {
@@ -7,23 +7,25 @@ export function useCreateRegistration() {
   
   return useMutation<RegistrationResponse, Error, RegistrationInput>({
     mutationFn: async (data: RegistrationInput) => {
-      const res = await fetch(api.registrations.create.path, {
-        method: api.registrations.create.method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      // Имитация задержки сети
+      await new Promise(resolve => setTimeout(resolve, 800));
       
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || "Ошибка при отправке заявки");
-      }
+      // Сохраняем локально в localStorage для демонстрации
+      const registrations = JSON.parse(localStorage.getItem("registrations") || "[]");
+      const newRegistration = {
+        ...data,
+        id: Math.floor(Math.random() * 10000),
+        createdAt: new Date().toISOString()
+      };
+      registrations.push(newRegistration);
+      localStorage.setItem("registrations", JSON.stringify(registrations));
       
-      return api.registrations.create.responses[201].parse(await res.json());
+      return newRegistration as any;
     },
     onSuccess: () => {
       toast({
-        title: "Заявка успешно отправлена!",
-        description: "Мы свяжемся с вами в ближайшее время.",
+        title: "Заявка успешно сохранена локально!",
+        description: "В этой версии данные хранятся в вашем браузере.",
         variant: "default",
       });
     },

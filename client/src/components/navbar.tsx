@@ -109,33 +109,77 @@ export function Navbar() {
       {/* Mobile Nav */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden glass-panel border-t border-border mt-3 overflow-hidden"
-          >
-            <div className="flex flex-col px-4 py-6 gap-4">
-              {NAV_LINKS.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  smooth={true}
-                  duration={500}
-                  offset={-80}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-lg font-medium text-foreground py-2 border-b border-border/50"
-                >
-                  {link.name}
-                </Link>
-              ))}
-              <Link to="contact" smooth={true} duration={500} offset={-80} onClick={() => setIsMobileMenuOpen(false)}>
-                <Button className="w-full mt-4 h-12 text-lg rounded-xl">
-                  Подать заявку
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 md:hidden"
+            />
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 bottom-0 w-[280px] bg-background border-l border-border z-50 md:hidden shadow-2xl"
+            >
+              <div className="flex flex-col h-full p-6">
+                <div className="flex items-center justify-between mb-8">
+                  <span className="font-bold text-lg">Меню</span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="rounded-full"
+                  >
+                    <X className="w-6 h-6" />
+                  </Button>
+                </div>
+                
+                <nav className="flex flex-col gap-2">
+                  {NAV_LINKS.map((link) => (
+                    <Link
+                      key={link.to}
+                      to={link.to}
+                      smooth={true}
+                      duration={500}
+                      offset={-80}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="text-lg font-medium text-foreground p-3 rounded-lg hover:bg-accent transition-colors cursor-pointer"
+                    >
+                      {link.name}
+                    </Link>
+                  ))}
+                </nav>
+
+                <div className="mt-auto space-y-4">
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-accent/50">
+                    <span className="text-sm font-medium">Тема</span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                      className="rounded-full h-8 w-8"
+                    >
+                      {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                    </Button>
+                  </div>
+                  <Link 
+                    to="contact" 
+                    smooth={true} 
+                    duration={500} 
+                    offset={-80} 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Button className="w-full h-12 text-lg rounded-xl font-bold shadow-lg shadow-primary/20">
+                      Подать заявку
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </header>
