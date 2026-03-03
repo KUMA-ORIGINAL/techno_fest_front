@@ -57,57 +57,58 @@ export function ScheduleSection() {
         </div>
 
         {/* Day Selectors */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
-          {scheduleData.map((day, index) => (
-            <button
-              key={index}
-              onClick={() => setActiveDay(index)}
-              className={`relative px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 ${
-                activeDay === index 
-                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25 scale-105" 
-                  : "bg-accent text-muted-foreground hover:bg-accent/80"
-              }`}
-            >
-              <div className="text-sm font-normal opacity-80 mb-1">{day.date}</div>
-              {day.day}
-            </button>
-          ))}
+        <div className="flex justify-center mb-8">
+          <div className="inline-flex p-1 bg-accent/50 backdrop-blur-sm rounded-xl border border-border/50">
+            {scheduleData.map((day, index) => (
+              <button
+                key={index}
+                onClick={() => setActiveDay(index)}
+                className={`relative px-4 py-2 sm:px-8 sm:py-3 rounded-lg font-bold text-sm sm:text-base transition-all duration-200 ${
+                  activeDay === index 
+                    ? "bg-background text-primary shadow-sm ring-1 ring-border/50 scale-[1.02]" 
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <div className="text-[10px] sm:text-xs font-normal opacity-70 leading-none mb-0.5">{day.date}</div>
+                {day.day.split(':')[1] || day.day}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Schedule List */}
-        <Card className="p-2 sm:p-6 border-border/50 bg-background/50 backdrop-blur-sm">
+        <div className="max-w-3xl mx-auto">
           <motion.div 
             key={activeDay}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4 }}
-            className="space-y-4"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-3"
           >
             {scheduleData[activeDay].events.map((event, index) => (
-              <div 
+              <Card 
                 key={index} 
-                className="group flex flex-col sm:flex-row gap-4 sm:gap-6 p-4 sm:p-6 rounded-xl hover:bg-accent/50 transition-colors border border-transparent hover:border-border/50"
+                className="group p-4 sm:p-5 border-border/40 bg-background/40 hover:bg-accent/30 transition-all hover:border-primary/30"
               >
-                <div className="sm:w-48 shrink-0 flex items-center gap-2 text-primary font-mono font-bold text-lg">
-                  <Clock className="w-5 h-5" />
-                  {event.time}
-                </div>
-                <div className="flex-1">
-                  <h4 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
-                    {event.title}
-                  </h4>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <MapPin className="w-4 h-4" />
-                    {event.location}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+                  <div className="flex items-center gap-2 text-primary font-mono font-bold text-sm sm:text-base shrink-0">
+                    <Clock className="w-4 h-4" />
+                    {event.time}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-base sm:text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors truncate">
+                      {event.title}
+                    </h4>
+                    <div className="flex items-center gap-1.5 mt-1 text-xs text-muted-foreground">
+                      <MapPin className="w-3.5 h-3.5 shrink-0" />
+                      <span className="truncate">{event.location}</span>
+                    </div>
                   </div>
                 </div>
-                <div className="shrink-0 sm:flex items-center hidden opacity-0 group-hover:opacity-100 transition-opacity">
-                  <PlayCircle className="w-8 h-8 text-primary/50" />
-                </div>
-              </div>
+              </Card>
             ))}
           </motion.div>
-        </Card>
+        </div>
       </div>
     </section>
   );
