@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import { type RegistrationInput, type RegistrationResponse } from "@shared/routes";
+import { type RegistrationInput, type RegistrationRecord } from "@/lib/registration";
 import { useToast } from "@/hooks/use-toast";
 
 export function useCreateRegistration() {
   const { toast } = useToast();
   
-  return useMutation<RegistrationResponse, Error, RegistrationInput>({
+  return useMutation<RegistrationRecord, Error, RegistrationInput>({
     mutationFn: async (data: RegistrationInput) => {
       // Имитация задержки сети
       await new Promise(resolve => setTimeout(resolve, 800));
@@ -20,7 +20,7 @@ export function useCreateRegistration() {
       registrations.push(newRegistration);
       localStorage.setItem("registrations", JSON.stringify(registrations));
       
-      return newRegistration as any;
+      return newRegistration;
     },
     onSuccess: () => {
       toast({

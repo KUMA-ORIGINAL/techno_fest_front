@@ -5,7 +5,7 @@ import { z } from "zod";
 import { Mail, Phone, MessageSquare, Send } from "lucide-react";
 
 import { useCreateRegistration } from "@/hooks/use-registrations";
-import { insertRegistrationSchema } from "@shared/schema";
+import { registrationSchema } from "@/lib/registration";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -30,8 +30,8 @@ import { Card, CardContent } from "@/components/ui/card";
 export function ContactSection() {
   const { mutate, isPending } = useCreateRegistration();
 
-  const form = useForm<z.infer<typeof insertRegistrationSchema>>({
-    resolver: zodResolver(insertRegistrationSchema),
+  const form = useForm<z.infer<typeof registrationSchema>>({
+    resolver: zodResolver(registrationSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -40,7 +40,7 @@ export function ContactSection() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof insertRegistrationSchema>) {
+  function onSubmit(values: z.infer<typeof registrationSchema>) {
     mutate(values, {
       onSuccess: () => {
         form.reset();
