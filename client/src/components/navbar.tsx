@@ -26,14 +26,28 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    // Prevent page scroll behind the mobile menu while keeping menu scrollable.
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileMenuOpen]);
+
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "glass-panel shadow-sm py-3" : "bg-transparent py-5"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled ? "glass-panel shadow-sm py-3" : "bg-transparent py-5"
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
           
           {/* Logo */}
           <Link
@@ -86,25 +100,26 @@ export function Navbar() {
             </div>
           </nav>
 
-          {/* Mobile Menu Toggle */}
-          <div className="flex items-center gap-4 md:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            >
-              {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </Button>
+            {/* Mobile Menu Toggle */}
+            <div className="flex items-center gap-4 md:hidden">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              >
+                {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              >
+                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      </header>
 
       {/* Mobile Nav */}
       <AnimatePresence>
@@ -115,14 +130,14 @@ export function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 md:hidden"
+              className="fixed inset-0 bg-background/80 backdrop-blur-sm z-[70] md:hidden"
             />
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 bottom-0 w-[280px] bg-background border-l border-border z-50 md:hidden shadow-2xl"
+              className="fixed top-0 right-0 bottom-0 w-[280px] bg-background border-l border-border z-[80] md:hidden shadow-2xl overflow-y-auto overscroll-contain"
             >
               <div className="flex flex-col h-full p-6">
                 <div className="flex items-center justify-between mb-8">
@@ -136,7 +151,7 @@ export function Navbar() {
                     <X className="w-6 h-6" />
                   </Button>
                 </div>
-                
+
                 <nav className="flex flex-col gap-2">
                   {NAV_LINKS.map((link) => (
                     <Link
@@ -153,24 +168,24 @@ export function Navbar() {
                   ))}
                 </nav>
 
-                <div className="mt-auto space-y-4">
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-accent/50">
+                <div className="mt-auto">
+                  <button
+                    type="button"
+                    onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                    className="w-full flex items-center justify-between p-3 rounded-lg bg-accent/50 hover:bg-accent transition-colors"
+                  >
                     <span className="text-sm font-medium">Тема</span>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                      className="rounded-full h-8 w-8"
-                    >
+                    <span className="rounded-full h-8 w-8 inline-flex items-center justify-center bg-background/70 border border-border">
                       {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                    </Button>
-                  </div>
-                  <Link 
-                    to="contact" 
-                    smooth={true} 
-                    duration={500} 
-                    offset={-80} 
+                    </span>
+                  </button>
+                  <Link
+                    to="contact"
+                    smooth={true}
+                    duration={500}
+                    offset={-80}
                     onClick={() => setIsMobileMenuOpen(false)}
+                    className="block mt-4"
                   >
                     <Button className="w-full h-12 text-lg rounded-xl font-bold shadow-lg shadow-primary/20">
                       Подать заявку
@@ -182,6 +197,6 @@ export function Navbar() {
           </>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
